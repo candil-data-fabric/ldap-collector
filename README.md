@@ -1,6 +1,6 @@
 # LDAP Collector
 
-The LDAP collector is a Python application based on the [`ldap3`](https://ldap3.readthedocs.io/en/latest/), [FastAPI](https://fastapi.tiangolo.com/) and [Uvicorn](https://www.uvicorn.org/) libraries.
+The LDAP Collector is a Python application based on the [`ldap3`](https://ldap3.readthedocs.io/en/latest/), [FastAPI](https://fastapi.tiangolo.com/) and [Uvicorn](https://www.uvicorn.org/) libraries.
 
 It connects to an LDAP server, retrieves information of users, roles, groups and organizations and generates a JSON object which can be used later by Morph-KGC to generate RDF triples given the appropriate mappings file. An example of this JSON output is available [here](examples/ldap.json).
 
@@ -8,7 +8,7 @@ The YARRRML mappings file can be found [here](examples/mappings.yaml), whereas i
 
 <img src="docs/aerOS-continuum-ontology.png" width="1200">
 
-The LDAP collector is a neccesary component for integrating LDAP data into the knowledge graph.
+The LDAP Collector is a neccesary component for integrating LDAP data into the knowledge graph.
 
 The generation and retrieval of the JSON object is requested via a REST API method (`HTTP GET /ldap.json`) that the collector exposes. A sequence diagram that describes the working principle of the collector is included below:
 
@@ -37,7 +37,7 @@ $ sudo docker pull ghcr.io/candil-data-fabric/ldap-collector:latest
 If you prefer to build the image yourself, simply run the following command:
 
 ```bash
-$ sudo docker build -t candil-data-fabric/ldap-collector:latest .
+$ sudo docker build -t ldap-collector:latest .
 ```
 
 **NOTE:** The collector will serve HTTP GET requests on port 63300 (TCP).
