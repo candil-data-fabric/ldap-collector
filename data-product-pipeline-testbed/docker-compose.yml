@@ -72,12 +72,7 @@ services:
       - ./ldap-collector/conf:/ldap-collector/conf
 
   morph-kgc:
-    build:
-      context: ./morph-kgc/
-      dockerfile: Dockerfile
-      args:
-        - optional_dependencies=kafka,sqlite,mysql
-    image: candil-data-fabric/morph-kgc:latest
+    image: ghcr.io/candil-data-fabric/morph-kgc:latest
     hostname: morph-kgc
     container_name: morph-kgc
     depends_on:
