@@ -4,21 +4,31 @@
 
 replicaCount: 1
 
-# File path where the configuration file will be stored:
-CONFIG_FILE_PATH: /ldap-collector/conf/config.ini
-
-# Configmap name declaration:
-configmap: ldap-collector-configmap
-
 image:
   repository: ghcr.io/candil-data-fabric/ldap-collector
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "2.0.1"
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+envVars:
+  - name: LDAP_ORGANIZATION_DN
+    value: "dc=example,dc=com"
+  - name: LDAP_SERVER_ENDPOINT
+    value: "ldap://openldap:389"
+  - name: LDAP_USE_SSL
+    value: "\"False\""
+  - name: LDAP_USER
+    value: "cn=admin,dc=example,dc=com"
+  - name: LDAP_PASSWORD
+    value: "aeros"
+  - name: LDAP_CONN_MAX_RETRIES
+    value: "5"
+  - name: LDAP_CONN_TIMEOUT
+    value: "5"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -94,15 +104,17 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes:
-  - name: configmap-volume
-    configMap:
-      name: ldap-collector-configmap
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts:
-  - name: configmap-volume
-    mountPath: "/ldap-collector/conf"
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
 
 nodeSelector: {}
 

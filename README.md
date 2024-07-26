@@ -15,10 +15,10 @@ The generation and retrieval of the JSON object is requested via a REST API meth
 ![](docs/sequence_diagram.png)
 
 ## Current versions:
-- **LDAP Collector application**: 1.1.3 (April 26th, 2024).
-- **Dockerfile**: 2.0.0 (June 3rd, 2024).
-- **Kubernetes manifest file**: 2.0.2 (June 4th, 2024).
-- **Helm Chart**: 2.0.2 (June 4th, 2024).
+- **LDAP Collector application**: 1.1.4 (July 22nd, 2024).
+- **Dockerfile**: 2.0.1 (July 22nd, 2024).
+- **Kubernetes manifest file**: 2.0.4 (July 22nd, 2024).
+- **Helm Chart**: 2.0.4 (July 22nd, 2024).
 
 ## Data Product Pipeline for LDAP
 
@@ -37,57 +37,25 @@ $ sudo docker pull ghcr.io/candil-data-fabric/ldap-collector:latest
 If you prefer to build the image yourself, simply run the following command:
 
 ```bash
-$ sudo docker build -t ldap-collector:latest .
+$ sudo docker build -t ldap-collector:2.0.1 -t ldap-collector:latest .
 ```
 
 **NOTE:** The collector will serve HTTP GET requests on port 63300 (TCP).
 
 ## Running the collector
 
-### Configuration file
-The collector is configured using an [`INI` file](https://en.wikipedia.org/wiki/INI_file).
+### Configuration
+The collector is configured using the following environmental variables:
 
-The location (file path) where this configuration file is stored must be defined using the following environmental variable: `CONFIG_FILE_PATH`. In case this variable is not set, the application will look for the file at `/ldap-collector/conf/config.ini`.
-
-An example file is available [here](conf/config.ini), although the structure of the file is the following:
-
-```ini
-; LDAP Collector - Configuration file.
-
-; Default configuration directives:
-[DEFAULT]
-; No default directives are used as of now.
-
-; (MANDATORY) General directives for the LDAP database:
-[ldap.general]
-; (MANDATORY) organization_dn (String): DN of the organization which information is to be retrieved.
-organization_dn = <value>
-
-; (MANDATORY) Directives for establishing a connection with the LDAP server:
-[ldap.connection]
-; (MANDATORY) server_endpoint (String): URI where the server is listening for incoming connections or requests.
-; FORMAT: ldap(s)://<ip_or_fqdn>:<port>
-; LDAP (unencrypted) port is 389. LDAPS (encrypted) port is 636.
-server_endpoint = <value>
-
-; (MANDATORY) use_ssl (Boolean): defines whether or not to use SSL for the connection with the server.
-; Valid values are True or False.
-use_ssl = <value>
-
-; (MANDATORY) user (String): defines the DN of the LDAP user for connecting and retrieving information.
-user = <value>
-
-; (MANDATORY) password (String): password of the LDAP user defined above.
-password = <value>
-
-; (MANDATORY) max_retries (Integer): defines the maximum number of times the client will try to establish
-; a connection with the server.
-max_retries = <value>
-
-; (MANDATORY) timeout (Integer): defines the time (in seconds) to wait between retries while trying to establish
-; a connection with the server.
-timeout = <value>
-```
+|      **Variable**     |                                                                                   **Description**                                                                                   |       **Default value**      |
+|:---------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------:|
+|  `LDAP_ORGANIZATION_DN` |                                                               LDAP DN of the organization to retieve information from.                                                               |      `"dc=example,dc=com"`     |
+|  `LDAP_SERVER_ENDPOINT` | URI where the LDAP server is listening from incoming connections or requests. FORMAT: `ldap(s)://<ip_or_fqdn>:<port>`. LDAP (unencrypted) port is 389. LDAPS (encrypted) port is 636. |     `"ldap://openldap:389"`    |
+|      `LDAP_USE_SSL`     |                                                            Whether or not to use SSL for the connection with the server.                                                            |          `"\"False\""`         |
+|       `LDAP_USER`       |                                                    LDAP DN of the user for connecting with the server and retrieving information.                                                   | `"cn=admin,dc=example,dc=com"` |
+|     `LDAP_PASSWORD`     |                                                   Password of the user for connecting with the server and retrieving information.                                                   |            `"aeros"`           |
+| `LDAP_CONN_MAX_RETRIES` |                                                Maximum number of retries while trying to establish a connection with the LDAP server.                                               |              `"5"`             |
+|   `LDAP_CONN_TIMEOUT`   |                                        Time (in seconds) to wait between retries while trying to establish a connection with the LDAP server.                                       |              `"5"`             |
 
 ### Docker Compose
 If you choose to deploy the collector using Docker Compose, you can define the service using the following directives:
@@ -100,16 +68,18 @@ ldap-collector:
     ports:
         - "63300:63300"
     environment:
-        - CONFIG_FILE_PATH=/ldap-collector/conf/config.ini
-    volumes:
-        - ./ldap-collector/conf:/ldap-collector/conf
+        - LDAP_ORGANIZATION_DN="dc=example,dc=com"
+        - LDAP_SERVER_ENDPOINT="ldap://openldap:389"
+        - LDAP_USE_SSL="False"
+        - LDAP_USER="cn=admin,dc=example,dc=com"
+        - LDAP_PASSWORD="aeros"
+        - LDAP_CONN_MAX_RETRIES="5"
+        - LDAP_CONN_TIMEOUT="5"
 ```
-
-You can change the configuration directives by modifying the [configuration file](conf/config.ini).
 
 ### Kubernetes manifest file
 
-Should you need to change the configuration directives for the collector, simply edit the [`ConfigMap` defined in the manifest file](kubernetes/ldap-collector.yaml).
+Should you need to change the configuration, simply edit the values of the environmental variables defined in the [manifest file](kubernetes/ldap-collector.yaml).
 
 To deploy the collector, run the following command at the `./kubernetes` directory:
 
@@ -125,7 +95,7 @@ $ kubectl delete -f ldap-collector.yaml
 
 ### Helm Chart
 
-Should you need to change the configuration directives for the collector, simply edit the [`ConfigMap` descriptor file](helm/templates/configmap.yaml). You can also modify the [`values.yaml`](helm/values.yaml) and [`Chart.yaml`](helm/Chart.yaml) files if you need it.
+Should you need to change/override the configuration of the collector, use the [`values.yaml`](helm/values.yaml) file as template to create your own and upgrade the Helm installation.
 
 To install the Helm Chart, run the following command at the `./kubernetes` directory:
 

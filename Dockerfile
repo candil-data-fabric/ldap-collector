@@ -4,8 +4,8 @@
 FROM ubuntu:jammy
 
 # Some labels are defined to store metadata.
-LABEL image_version="2.0.0"
-LABEL app_version="1.1.3"
+LABEL image_version="2.0.1"
+LABEL app_version="1.1.4"
 LABEL maintainer="David Martínez García"
 
 # Variables to automatically install/update tzdata.
@@ -18,8 +18,9 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get autoremove -y && apt-ge
 # Install some basic tools and dependencies.
 RUN apt-get install -y --no-install-recommends bash python3 python3-pip openssl net-tools wget curl iputils-ping
 
-# Install Python dependencies using PIP.
-RUN python3 -m pip install ldap3 fastapi uvicorn
+# Install Python dependencies/requirements using PIP.
+COPY ./requirements.txt .
+RUN python3 -m pip install -r requirements.txt
 
 # Create application's directory and copy the script.
 RUN mkdir -p /ldap-collector

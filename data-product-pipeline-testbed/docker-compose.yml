@@ -67,9 +67,13 @@ services:
     ports:
       - "63300:63300"
     environment:
-      - CONFIG_FILE_PATH=/ldap-collector/conf/config.ini
-    volumes:
-      - ./ldap-collector/conf:/ldap-collector/conf
+      - LDAP_ORGANIZATION_DN=dc=example,dc=com
+      - LDAP_SERVER_ENDPOINT=ldap://openldap:389
+      - LDAP_USE_SSL=False
+      - LDAP_USER=cn=admin,dc=example,dc=com
+      - LDAP_PASSWORD=candil
+      - LDAP_CONN_MAX_RETRIES=5
+      - LDAP_CONN_TIMEOUT=5
 
   morph-kgc:
     image: ghcr.io/candil-data-fabric/morph-kgc:latest
@@ -110,7 +114,7 @@ services:
     build:
       context: ./rdf-to-ngsi-ld/
       dockerfile: Dockerfile
-    image: candil-data-fabric/rdf-to-ngsi-ld:latest
+    image: rdf-to-ngsi-ld:latest
     hostname: rdf-to-ngsi-ld
     container_name: rdf-to-ngsi-ld
     restart: always
