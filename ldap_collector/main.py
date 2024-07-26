@@ -1,11 +1,10 @@
 __name__ = "LDAP Collector"
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 __author__ = "David Martínez García"
 __credits__ = ["GIROS DIT-UPM", "Luis Bellido Triana", "Daniel González Sánchez", "David Martínez García"]
 
 ## -- BEGIN IMPORT STATEMENTS -- ##
 
-import configparser
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 import json
@@ -18,25 +17,26 @@ import os
 
 ## -- BEGIN CONSTANTS DECLARATION -- ##
 
-# The configuration file path is defined as an environment variable:
-# Default value is: /ldap-collector/conf/config.ini
-CONFIG_FILE_PATH = os.getenv("CONFIG_FILE_PATH", "/ldap-collector/conf/config.ini")
+# LDAP DN of the organization to retrieve information from:
+LDAP_ORGANIZATION_DN = os.getenv("LDAP_ORGANIZATION_DN", "dc=example,dc=com")
 
-### CONFIGURATION SECTIONS AND DIRECTIVES ###
+# URI where the LDAP server is listening for incoming connections or requests:
+# FORMAT: ldap(s)://<ip_or_fqdn>:<port>.
+# LDAP (unencrypted) port is 389. LDAPS (encrypted) port is 636.
+LDAP_SERVER_ENDPOINT = os.getenv("LDAP_SERVER_ENDPOINT", "ldap://openldap:389")
 
-REQUIRED_CONFIG_SECTIONS = [
-    "ldap.general", "ldap.connection"
-]
+# Whether or not to use SSL for the connection with the server:
+LDAP_USE_SSL = os.getenv("LDAP_USE_SSL", "False") == "True"
 
-LDAP_GENERAL_REQUIRED_CONF_DIRECTIVES = [
-    "organization_dn"
-]
+# LDAP DN and password of the user for connecting with the server and retrieving information:
+LDAP_USER = os.getenv("LDAP_USER", "cn=admin,dc=example,dc=com")
+LDAP_PASSWORD = os.getenv("LDAP_PASSWORD", "aeros")
 
-LDAP_CONNECTION_REQUIRED_CONF_DIRECTIVES = [
-    "server_endpoint", "use_ssl", "user", "password", "max_retries", "timeout"
-]
+# Maximum number of times the client will try to establish a connection with the LDAP server:
+LDAP_CONN_MAX_RETRIES = os.getenv("LDAP_CONN_MAX_RETRIES", "5")
 
-### --- ###
+# Time (in seconds) to wait between retries while trying to establish a connection with the LDAP server:
+LDAP_CONN_TIMEOUT = os.getenv("LDAP_CONN_TIMEOUT", "5")
 
 ## -- END CONSTANTS DECLARATION -- ##
 
@@ -47,56 +47,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ## -- END LOGGING CONFIGURATION -- ##
 
-## -- BEGIN LOADING CONFIGURATION DIRECTIVES -- ##
-
-config = configparser.ConfigParser()
-config.read(CONFIG_FILE_PATH)
-
-## -- END LOADING CONFIGURATION DIRECTIVES -- ##
-
 ## -- BEGIN DEFINITION OF AUXILIARY FUNCTIONS AND VARIABLES -- ##
-
-def check_config(config: configparser.ConfigParser):
-    """
-    Checks if the configuration directives are valid, this is, the configuration file
-    is correct in its entirety.
-    """
-    logger.info("Checking configuration file...")
-
-    config_sections = config.sections()
-
-    if not config_sections:
-        logger.error("Configuration file is invalid")
-        raise RuntimeError("Configuration file is invalid")
-    else:
-        if config_sections != REQUIRED_CONFIG_SECTIONS:
-            logger.error("Missing or invalid configuration sections")
-            logger.error("Provided configuration sections: " + str(config_sections))
-            logger.error("Required configuration sections: " + str(REQUIRED_CONFIG_SECTIONS))
-            raise RuntimeError("Missing or invalid configuration sections")
-        else:
-            for config_section in config_sections:
-                if config_section != "output" and not config[config_section]:
-                    logger.error("No directives found in required configuration section: " + config_section)
-                    raise RuntimeError("No directives found in required configuration section: " + config_section)
-                else:
-                    directives = []
-                    for directive in config[config_section]:
-                        directives.append(directive)
-                    if config_section == "ldap.general":
-                        if directives != LDAP_GENERAL_REQUIRED_CONF_DIRECTIVES:
-                            logger.error("Missing or invalid required configuration directives for ldap.general section")
-                            logger.error("Provided configuration directives: " + str(directives))
-                            logger.error("Required configuration directives: " + str(LDAP_GENERAL_REQUIRED_CONF_DIRECTIVES))
-                            raise RuntimeError("Missing or invalid configuration directives for ldap.general section")
-                    if config_section == "ldap.connection":
-                        if directives != LDAP_CONNECTION_REQUIRED_CONF_DIRECTIVES:
-                            logger.error("Missing or invalid required configuration directives for ldap.connection section")
-                            logger.error("Provided configuration directives: " + str(directives))
-                            logger.error("Required configuration directives: " + str(LDAP_CONNECTION_REQUIRED_CONF_DIRECTIVES))
-                            raise RuntimeError("Missing or invalid configuration directives for ldap.connection section")
-
-    logger.info("Configuration file checked")
 
 def establish_connection(server: Server, user: str, password: str, max_retries: int, timeout: int) -> Connection:
     """
@@ -255,9 +206,6 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
 async def lifespan(app: FastAPI):
     logger.info("Application started")
 
-    # Check configuration file
-    check_config(config=config)
-
     yield
 
     logger.info("Application finished")
@@ -276,15 +224,14 @@ app = FastAPI(
 async def get_ldap(request: Request) -> dict:
     logger.info("Received HTTP GET request from " + request.client.host + ":" + str(request.client.port) + " to /ldap.json")
 
-    # Retrieve values related with LDAP from configuration directives.
-    organization_dn = config["ldap.general"]["organization_dn"]
-
-    server_endpoint = config["ldap.connection"]["server_endpoint"]
-    use_ssl = config["ldap.connection"].getboolean("use_ssl")
-    user = config["ldap.connection"]["user"]
-    password = config["ldap.connection"]["password"]
-    max_retries = config["ldap.connection"].getint("max_retries")
-    timeout = config["ldap.connection"].getint("max_retries")
+    # Retrieve values related with LDAP from environmental variables.
+    organization_dn = LDAP_ORGANIZATION_DN
+    server_endpoint = LDAP_SERVER_ENDPOINT
+    use_ssl = LDAP_USE_SSL
+    user = LDAP_USER
+    password = LDAP_PASSWORD
+    max_retries = int(LDAP_CONN_MAX_RETRIES)
+    timeout = int(LDAP_CONN_TIMEOUT)
 
     # Instantiate the representation of the LDAP server.
     server = Server(host=server_endpoint, use_ssl=use_ssl, get_info=ALL)

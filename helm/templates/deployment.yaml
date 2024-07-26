@@ -40,9 +40,10 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- with .Values.envVars }}
           env:
-            - name: CONFIG_FILE_PATH
-              value: {{ .Values.CONFIG_FILE_PATH }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
