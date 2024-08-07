@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
       - name: ldap-collector
-        image: ghcr.io/candil-data-fabric/ldap-collector:2.0.1
+        image: ghcr.io/candil-data-fabric/ldap-collector:2.0.3
         imagePullPolicy: Always
         ports:
         - containerPort: 63300
-        env:
+        env: # Modify values accordingly
         - name: LDAP_ORGANIZATION_DN
           value: "dc=example,dc=com"
         - name: LDAP_SERVER_ENDPOINT
@@ -31,7 +31,7 @@ spec:
         - name: LDAP_USER
           value: "cn=admin,dc=example,dc=com"
         - name: LDAP_PASSWORD
-          value: "aeros"
+          value: "candil"
         - name: LDAP_CONN_MAX_RETRIES
           value: "5"
         - name: LDAP_CONN_TIMEOUT
