@@ -1,5 +1,5 @@
 __name__ = "LDAP Collector"
-__version__ = "1.1.4"
+__version__ = "2.0.3"
 __author__ = "David Martínez García"
 __credits__ = ["GIROS DIT-UPM", "Luis Bellido Triana", "Daniel González Sánchez", "David Martínez García"]
 
@@ -43,7 +43,10 @@ LDAP_CONN_TIMEOUT = os.getenv("LDAP_CONN_TIMEOUT", "5")
 ## -- BEGIN LOGGING CONFIGURATION -- ## 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.DEBUG,
+    datefmt='%Y-%m-%d %H:%M:%S')
 
 ## -- END LOGGING CONFIGURATION -- ##
 

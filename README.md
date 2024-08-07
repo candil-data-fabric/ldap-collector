@@ -15,10 +15,10 @@ The generation and retrieval of the JSON object is requested via a REST API meth
 ![](docs/sequence_diagram.png)
 
 ## Current versions:
-- **LDAP Collector application**: 1.1.4 (July 22nd, 2024).
-- **Dockerfile**: 2.0.1 (July 22nd, 2024).
-- **Kubernetes manifest file**: 2.0.4 (July 22nd, 2024).
-- **Helm Chart**: 2.0.4 (July 22nd, 2024).
+- **LDAP Collector application**: 2.0.3 (August 5th, 2024).
+- **Dockerfile**: 2.0.3 (August 5th, 2024).
+- **Kubernetes manifest file**: 2.0.6 (August 5th, 2024).
+- **Helm Chart**: 2.0.6 (August 5th, 2024).
 
 ## Data Product Pipeline for LDAP
 
@@ -37,7 +37,7 @@ $ sudo docker pull ghcr.io/candil-data-fabric/ldap-collector:latest
 If you prefer to build the image yourself, simply run the following command:
 
 ```bash
-$ sudo docker build -t ldap-collector:2.0.1 -t ldap-collector:latest .
+$ sudo docker build -t ldap-collector:latest .
 ```
 
 **NOTE:** The collector will serve HTTP GET requests on port 63300 (TCP).

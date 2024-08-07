@@ -8,13 +8,13 @@ image:
   repository: ghcr.io/candil-data-fabric/ldap-collector
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.0.1"
+  tag: "2.0.3"
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-envVars:
+envVars: # Modify values accordingly
   - name: LDAP_ORGANIZATION_DN
     value: "dc=example,dc=com"
   - name: LDAP_SERVER_ENDPOINT
@@ -24,7 +24,7 @@ envVars:
   - name: LDAP_USER
     value: "cn=admin,dc=example,dc=com"
   - name: LDAP_PASSWORD
-    value: "aeros"
+    value: "candil"
   - name: LDAP_CONN_MAX_RETRIES
     value: "5"
   - name: LDAP_CONN_TIMEOUT
