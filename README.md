@@ -95,19 +95,7 @@ $ kubectl delete -f ldap-collector.yaml
 
 ### Helm Chart
 
-Should you need to change/override the configuration of the collector, use the [`values.yaml`](helm/values.yaml) file as template to create your own and upgrade the Helm installation.
-
-To install the Helm Chart, run the following command at the `./kubernetes` directory:
-
-```bash
-$ helm install ldap-collector ./helm
-```
-
-To uninstall the Helm Chart, run the following command:
-
-```bash
-$ helm uninstall ldap-collector
-```
+There is a Helm Chart available in the following repository: https://github.com/candil-data-fabric/ldap-collector-helm. It also contains instructions on how to install and use it.
 
 ## Running the data product pipeline testbed
 

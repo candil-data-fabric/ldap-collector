@@ -1,4 +1,0 @@
-The LDAP Collector will be available for incoming HTTP GET requests at port 63300 (TCP).
-It will only be available for other pods/services running in the same cluster.
-
-Check the service name with "kubectl get services" and look for the entry associated with the LDAP Collector.
