@@ -1,4 +1,4 @@
-name: Build and push Docker image
+name: Build and push Docker image to GitHub Packages
 
 # Trigger the workflow on release creation for the main branch:
 on:
@@ -6,7 +6,7 @@ on:
     types: [released]
 
 jobs:
-  build_and_push:
+  docker_image_build_and_push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
