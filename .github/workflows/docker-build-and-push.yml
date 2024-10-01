@@ -15,7 +15,7 @@ jobs:
     steps:
     # Checkout the repository:
     - name: Checkout code
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
 
     # Log in to GitHub Docker Registry (GitHub Packages):
     - name: Log in to GitHub Docker Registry
