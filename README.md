@@ -95,7 +95,7 @@ $ kubectl delete -f ldap-collector.yaml
 
 ### Helm Chart
 
-The Helm Chart is available in the following repository: https://github.com/candil-data-fabric/ldap-collector-helm. It also contains instructions on how to install and use it.
+There is a Helm Chart available in the following repository: https://github.com/candil-data-fabric/ldap-collector-helm. It also contains instructions on how to install and use it.
 
 ## Running the data product pipeline testbed
 
