@@ -31,7 +31,7 @@ spec:
         - name: LDAP_USER
           value: "cn=admin,dc=example,dc=com"
         - name: LDAP_PASSWORD
-          value: "candil"
+          value: "aeros"
         - name: LDAP_CONN_MAX_RETRIES
           value: "5"
         - name: LDAP_CONN_TIMEOUT
