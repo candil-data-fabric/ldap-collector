@@ -3,10 +3,7 @@ name: Build and push Docker image
 # Trigger the workflow on release creation for the main branch:
 on:
   release:
-    types: [created]
-  push:
-    branches:
-      - main
+    types: [released]
 
 jobs:
   build_and_push:
