@@ -1,5 +1,5 @@
 __name__ = "LDAP Collector"
-__version__ = "2.0.3"
+__version__ = "2.1.0"
 __author__ = "David Martínez García"
 __credits__ = ["GIROS DIT-UPM", "Luis Bellido Triana", "Daniel González Sánchez", "David Martínez García"]
 
@@ -18,25 +18,25 @@ import os
 ## -- BEGIN CONSTANTS DECLARATION -- ##
 
 # LDAP DN of the organization to retrieve information from:
-LDAP_ORGANIZATION_DN = os.getenv("LDAP_ORGANIZATION_DN", "dc=example,dc=com")
+LDAP_ORGANIZATION_DN = os.getenv("LDAP_ORGANIZATION_DN")
 
 # URI where the LDAP server is listening for incoming connections or requests:
 # FORMAT: ldap(s)://<ip_or_fqdn>:<port>.
 # LDAP (unencrypted) port is 389. LDAPS (encrypted) port is 636.
-LDAP_SERVER_ENDPOINT = os.getenv("LDAP_SERVER_ENDPOINT", "ldap://openldap:389")
+LDAP_SERVER_ENDPOINT = os.getenv("LDAP_SERVER_ENDPOINT")
 
 # Whether or not to use SSL for the connection with the server:
 LDAP_USE_SSL = os.getenv("LDAP_USE_SSL", "False") == "True"
 
 # LDAP DN and password of the user for connecting with the server and retrieving information:
-LDAP_USER = os.getenv("LDAP_USER", "cn=admin,dc=example,dc=com")
-LDAP_PASSWORD = os.getenv("LDAP_PASSWORD", "aeros")
+LDAP_USER = os.getenv("LDAP_USER")
+LDAP_PASSWORD = os.getenv("LDAP_PASSWORD")
 
 # Maximum number of times the client will try to establish a connection with the LDAP server:
-LDAP_CONN_MAX_RETRIES = os.getenv("LDAP_CONN_MAX_RETRIES", "5")
+LDAP_CONN_MAX_RETRIES = os.getenv("LDAP_CONN_MAX_RETRIES")
 
 # Time (in seconds) to wait between retries while trying to establish a connection with the LDAP server:
-LDAP_CONN_TIMEOUT = os.getenv("LDAP_CONN_TIMEOUT", "5")
+LDAP_CONN_TIMEOUT = os.getenv("LDAP_CONN_TIMEOUT")
 
 ## -- END CONSTANTS DECLARATION -- ##
 

@@ -15,10 +15,9 @@ The generation and retrieval of the JSON object is requested via a REST API meth
 ![](docs/sequence_diagram.png)
 
 ## Current versions:
-- **LDAP Collector application**: 2.0.3 (August 5th, 2024).
-- **Dockerfile**: 2.0.3 (August 5th, 2024).
-- **Kubernetes manifest file**: 2.0.6 (August 5th, 2024).
-- **Helm Chart**: 2.0.6 (August 5th, 2024).
+- **LDAP Collector application**: 2.1.0 (October 15th, 2024).
+- **Dockerfile**: 2.1.0 (October 15th, 2024).
+- **Kubernetes manifest file**: 2.1.0 (October 15th, 2024).
 
 ## Data Product Pipeline for LDAP
 
@@ -47,15 +46,15 @@ $ sudo docker build -t ldap-collector:latest .
 ### Configuration
 The collector is configured using the following environmental variables:
 
-|      **Variable**     |                                                                                   **Description**                                                                                   |       **Default value**      |
-|:---------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------:|
-|  `LDAP_ORGANIZATION_DN` |                                                               LDAP DN of the organization to retieve information from.                                                               |      `"dc=example,dc=com"`     |
-|  `LDAP_SERVER_ENDPOINT` | URI where the LDAP server is listening from incoming connections or requests. FORMAT: `ldap(s)://<ip_or_fqdn>:<port>`. LDAP (unencrypted) port is 389. LDAPS (encrypted) port is 636. |     `"ldap://openldap:389"`    |
-|      `LDAP_USE_SSL`     |                                                            Whether or not to use SSL for the connection with the server.                                                            |          `"\"False\""`         |
-|       `LDAP_USER`       |                                                    LDAP DN of the user for connecting with the server and retrieving information.                                                   | `"cn=admin,dc=example,dc=com"` |
-|     `LDAP_PASSWORD`     |                                                   Password of the user for connecting with the server and retrieving information.                                                   |            `"aeros"`           |
-| `LDAP_CONN_MAX_RETRIES` |                                                Maximum number of retries while trying to establish a connection with the LDAP server.                                               |              `"5"`             |
-|   `LDAP_CONN_TIMEOUT`   |                                        Time (in seconds) to wait between retries while trying to establish a connection with the LDAP server.                                       |              `"5"`             |
+|      **Variable**     |                                                                                   **Description**                                                                                   |
+|:---------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|  `LDAP_ORGANIZATION_DN` |                                                               LDAP DN of the organization to retieve information from.                                                               |
+|  `LDAP_SERVER_ENDPOINT` | URI where the LDAP server is listening from incoming connections or requests. FORMAT: `ldap(s)://<ip_or_fqdn>:<port>`. LDAP (unencrypted) port is 389. LDAPS (encrypted) port is 636. |
+|      `LDAP_USE_SSL`     |                                                            Whether or not to use SSL for the connection with the server.                                                            |
+|       `LDAP_USER`       |                                                    LDAP DN of the user for connecting with the server and retrieving information.                                                   |
+|     `LDAP_PASSWORD`     |                                                   Password of the user for connecting with the server and retrieving information.                                                   |
+| `LDAP_CONN_MAX_RETRIES` |                                                Maximum number of retries while trying to establish a connection with the LDAP server.                                               |
+|   `LDAP_CONN_TIMEOUT`   |                                        Time (in seconds) to wait between retries while trying to establish a connection with the LDAP server.                                       |
 
 ### Docker Compose
 If you choose to deploy the collector using Docker Compose, you can define the service using the following directives:
@@ -72,7 +71,7 @@ ldap-collector:
         - LDAP_SERVER_ENDPOINT="ldap://openldap:389"
         - LDAP_USE_SSL="False"
         - LDAP_USER="cn=admin,dc=example,dc=com"
-        - LDAP_PASSWORD="aeros"
+        - LDAP_PASSWORD="adminpassword"
         - LDAP_CONN_MAX_RETRIES="5"
         - LDAP_CONN_TIMEOUT="5"
 ```
@@ -92,13 +91,3 @@ To delete the deployment, run the following command, also at the `./kubernetes` 
 ```bash
 $ kubectl delete -f ldap-collector.yaml
 ```
-
-### Helm Chart
-
-There is a Helm Chart available in the following repository: https://github.com/candil-data-fabric/ldap-collector-helm. It also contains instructions on how to install and use it.
-
-## Running the data product pipeline testbed
-
-In the [`data-product-pipeline-testbed`](data-product-pipeline-testbed) subdirectory you can find a Docker Compose scenario that defines a testbed with a _data product pipeline_ for testing the LDAP Collector as well as the integration of LDAP data into the knowledge graph.
-
-Go [here](data-product-pipeline-testbed/README.md) to get instructions on how to run and interact with the testbed.
