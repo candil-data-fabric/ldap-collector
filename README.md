@@ -71,7 +71,7 @@ ldap-collector:
         - LDAP_SERVER_ENDPOINT="ldap://openldap:389"
         - LDAP_USE_SSL="False"
         - LDAP_USER="cn=admin,dc=example,dc=com"
-        - LDAP_PASSWORD="aeros"
+        - LDAP_PASSWORD="adminpassword"
         - LDAP_CONN_MAX_RETRIES="5"
         - LDAP_CONN_TIMEOUT="5"
 ```
