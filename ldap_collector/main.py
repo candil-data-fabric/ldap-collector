@@ -1,5 +1,5 @@
 __name__ = "LDAP Collector"
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 __author__ = "David Martínez García"
 __credits__ = ["GIROS DIT-UPM", "Luis Bellido Triana", "Daniel González Sánchez", "David Martínez García"]
 
@@ -154,7 +154,7 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
             if (raw_attribute == 'objectClass'):
                 user["attributes"][raw_attribute] = users["entries"][entry]["raw"][raw_attribute]
             else:
-                user["attributes"][raw_attribute] = users["entries"][entry]["raw"][raw_attribute][0]    
+                user["attributes"][raw_attribute] = users["entries"][entry]["raw"][raw_attribute][0]
         ldap_json["users"].append(user)
 
     # -- Roles --
@@ -185,6 +185,13 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
         for raw_attribute in groups["entries"][entry]["raw"]:
             if (raw_attribute == 'objectClass') or (raw_attribute == 'memberUid'):
                 group["attributes"][raw_attribute] = groups["entries"][entry]["raw"][raw_attribute]
+                # Include group common name (CN) in memberships:
+                # Currently, only one group per user is included because of limitations with YARRRML (post processing of JSON output).
+                if (raw_attribute == 'memberUid'):
+                    for memberUid in groups["entries"][entry]["raw"]["memberUid"]:
+                        for membership in ldap_json["memberships"]:
+                            if membership["memberUid"] == memberUid:
+                                membership["group_cn"] = groups["entries"][entry]["raw"]["cn"][0]
             else:
                 group["attributes"][raw_attribute] = groups["entries"][entry]["raw"][raw_attribute][0]                
         ldap_json["groups"].append(group)
