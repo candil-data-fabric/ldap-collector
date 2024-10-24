@@ -28,13 +28,14 @@ mappings:
     po:
       - [a, org:Role]
 
+  # Specific use case: LDAP groups are considered organizations.
   organizations:
     sources:
-      - ['http://ldap-collector:63300/ldap.json~jsonpath', '$.organizations[*]']
-    s: org:$(attributes.dc)
+      - ['http://ldap-collector:63300/ldap.json~jsonpath', '$.groups[*]']
+    s: org:$(attributes.cn)
     po:
       - [a, org:Organization]
-      - [dct:title, $(attributes.o), xsd:string]
+      - [dct:title, $(attributes.cn), xsd:string]
   
   membership:
     sources:
@@ -64,5 +65,5 @@ mappings:
             condition:
               function: equal
               parameters:
-                - [str1, $(organization_dn), s]
-                - [str2, $(dn), o]
+                - [str1, $(group_cn), s]
+                - [str2, $(attributes.cn), o]
