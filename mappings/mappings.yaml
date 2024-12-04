@@ -32,7 +32,7 @@ mappings:
   organizations:
     sources:
       - ['http://ldap-collector:63300/ldap.json~jsonpath', '$.groups[*]']
-    s: urn:$(attributes.cn)
+    s: urn:Organization:$(attributes.cn)
     po:
       - [a, org:Organization]
       - [dct:identifier, $(attributes.cn), xsd:string]
