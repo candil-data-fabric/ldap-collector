@@ -15,9 +15,9 @@ The generation and retrieval of the JSON object is requested via a REST API meth
 ![](docs/sequence_diagram.png)
 
 ## Current versions:
-- **LDAP Collector application**: 2.2.0 (October 24th, 2024).
-- **Dockerfile**: 2.2.0 (October 24th, 2024).
-- **Kubernetes manifest file**: 2.2.0 (October 24th, 2024).
+- **LDAP Collector application**: 2.2.0 (December 5th, 2024).
+- **Dockerfile**: 2.2.0 (December 5th, 2024).
+- **Kubernetes manifest file**: 2.2.0 (December 5th, 2024).
 
 ## Building the Docker image
 
