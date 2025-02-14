@@ -1,0 +1,55 @@
+# LDAP Collector - Kubernetes descriptor/manifest file.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldap-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: ldap-collector
+        id: "0"
+  template:
+    metadata:
+      labels:
+        app: ldap-collector
+        id: "0"
+    spec:
+      containers:
+      - name: ldap-collector
+        image: ghcr.io/candil-data-fabric/ldap-collector:2.2.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 63300
+        env: # Modify values accordingly
+        - name: LDAP_ORGANIZATION_DN
+          value: "dc=example,dc=com"
+        - name: LDAP_SERVER_ENDPOINT
+          value: "ldap://openldap:389"
+        - name: LDAP_USE_SSL
+          value: "\"False\""
+        - name: LDAP_USER
+          value: "cn=admin,dc=example,dc=com"
+        - name: LDAP_PASSWORD
+          value: "adminpassword"
+        - name: LDAP_CONN_MAX_RETRIES
+          value: "5"
+        - name: LDAP_CONN_TIMEOUT
+          value: "5"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ldap-collector
+  labels:
+    name: ldap-collector
+    id: "0"
+spec:
+  type: ClusterIP
+  ports:
+  - name: ldap-collector
+    port: 63300
+    protocol: TCP
+  selector:
+    app: ldap-collector
+    id: "0"
