@@ -1,0 +1,43 @@
+services:
+  openldap:
+    image: bitnami/openldap:latest
+    container_name: openldap
+    user: root
+    environment:
+      - LDAP_PORT_NUMBER=389
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=candil
+      - LDAP_ROOT=dc=example,dc=com
+      - LDAP_CUSTOM_LDIF_DIR=/ldifs
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ./ldap-data:/ldifs
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    ports:
+      - "6443:443"
+    depends_on:
+      - openldap
+
+  ldap-collector:
+    image: ghcr.io/candil-data-fabric/ldap-collector:2.2.1
+    hostname: ldap-collector
+    container_name: ldap-collector
+    depends_on:
+      - openldap
+    ports:
+      - "63300:63300"
+    environment:
+      - LDAP_ORGANIZATION_DN=dc=example,dc=com
+      - LDAP_SERVER_ENDPOINT=ldap://openldap:389
+      - LDAP_USE_SSL=False
+      - LDAP_USER=cn=admin,dc=example,dc=com
+      - LDAP_PASSWORD=candil
+      - LDAP_CONN_MAX_RETRIES=5
+      - LDAP_CONN_TIMEOUT=5
