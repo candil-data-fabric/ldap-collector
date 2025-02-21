@@ -123,22 +123,6 @@
   ],
   "roles": [
     {
-      "dn": "cn=admin,ou=roles,dc=example,dc=com",
-      "attributes": {
-        "cn": "admin",
-        "gidNumber": "501",
-        "memberUid": [
-          "user1",
-          "user2",
-          "user3"
-        ],
-        "objectClass": [
-          "posixGroup",
-          "top"
-        ]
-      }
-    },
-    {
       "dn": "cn=support,ou=roles,dc=example,dc=com",
       "attributes": {
         "cn": "support",
@@ -177,6 +161,22 @@
           "user1",
           "user2",
           "user4"
+        ],
+        "objectClass": [
+          "posixGroup",
+          "top"
+        ]
+      }
+    },
+    {
+      "dn": "cn=org%20admin,ou=roles,dc=example,dc=com",
+      "attributes": {
+        "cn": "org%20admin",
+        "gidNumber": "501",
+        "memberUid": [
+          "user1",
+          "user2",
+          "user3"
         ],
         "objectClass": [
           "posixGroup",
@@ -222,24 +222,6 @@
   ],
   "memberships": [
     {
-      "memberUid": "user1",
-      "role_cn": "admin",
-      "organization_dn": "dc=example,dc=com",
-      "group_cn": "default"
-    },
-    {
-      "memberUid": "user2",
-      "role_cn": "admin",
-      "organization_dn": "dc=example,dc=com",
-      "group_cn": "default"
-    },
-    {
-      "memberUid": "user3",
-      "role_cn": "admin",
-      "organization_dn": "dc=example,dc=com",
-      "group_cn": "default"
-    },
-    {
       "memberUid": "user5",
       "role_cn": "support",
       "organization_dn": "dc=example,dc=com",
@@ -278,6 +260,24 @@
     {
       "memberUid": "user4",
       "role_cn": "financial",
+      "organization_dn": "dc=example,dc=com",
+      "group_cn": "default"
+    },
+    {
+      "memberUid": "user1",
+      "role_cn": "org%20admin",
+      "organization_dn": "dc=example,dc=com",
+      "group_cn": "default"
+    },
+    {
+      "memberUid": "user2",
+      "role_cn": "org%20admin",
+      "organization_dn": "dc=example,dc=com",
+      "group_cn": "default"
+    },
+    {
+      "memberUid": "user3",
+      "role_cn": "org%20admin",
       "organization_dn": "dc=example,dc=com",
       "group_cn": "default"
     }

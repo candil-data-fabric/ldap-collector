@@ -1,5 +1,5 @@
 __name__ = "LDAP Collector"
-__version__ = "2.2.1"
+__version__ = "2.2.2"
 __author__ = "David Martínez García"
 __credits__ = ["GIROS DIT-UPM", "Luis Bellido Triana", "Daniel González Sánchez", "David Martínez García"]
 
@@ -40,7 +40,7 @@ LDAP_CONN_TIMEOUT = os.getenv("LDAP_CONN_TIMEOUT")
 
 ## -- END CONSTANTS DECLARATION -- ##
 
-## -- BEGIN LOGGING CONFIGURATION -- ## 
+## -- BEGIN LOGGING CONFIGURATION -- ##
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -74,7 +74,7 @@ def establish_connection(server: Server, user: str, password: str, max_retries: 
         if connection is not None:
             logger.info("Connection sucessfully established")
             break
-    
+
     return connection
 
 def retrieve_information(connection: Connection, organization_dn: str):
@@ -144,7 +144,7 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
     ldap_json["groups"] = []
     ldap_json["organizations"] = []
     ldap_json["memberships"] = []
-    
+
     # -- Users --
     for entry in range(1, len(users["entries"])):
         user = {}
@@ -161,9 +161,12 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
             last_name = splitted_given_name[0].strip()
         else:
             first_name = splitted_given_name[0].strip()
-            last_name = splitted_given_name[1].strip()    
+            last_name = splitted_given_name[1].strip()
         user["attributes"]["firstName"] = first_name
         user["attributes"]["lastName"] = last_name
+        # Replace white spaces in "dn" and "uid" properties with literal "%20".
+        user["dn"] = user["dn"].replace(" ", "%20")
+        user["attributes"]["uid"] = user["attributes"]["uid"].replace(" ", "%20")
         ldap_json["users"].append(user)
 
     # -- Roles --
@@ -183,7 +186,10 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
                         membership["organization_dn"] = organization_dn
                         ldap_json["memberships"].append(membership)
             else:
-                role["attributes"][raw_attribute] = roles["entries"][entry]["raw"][raw_attribute][0]                
+                role["attributes"][raw_attribute] = roles["entries"][entry]["raw"][raw_attribute][0]
+        # Replace white spaces in "dn" and "cn" properties with literal "%20".
+        role["dn"] = role["dn"].replace(" ", "%20")
+        role["attributes"]["cn"] = role["attributes"]["cn"].replace(" ", "%20")
         ldap_json["roles"].append(role)
 
     # -- Groups --
@@ -202,7 +208,10 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
                             if membership["memberUid"] == memberUid:
                                 membership["group_cn"] = groups["entries"][entry]["raw"]["cn"][0]
             else:
-                group["attributes"][raw_attribute] = groups["entries"][entry]["raw"][raw_attribute][0]                
+                group["attributes"][raw_attribute] = groups["entries"][entry]["raw"][raw_attribute][0]
+        # Replace white spaces in "dn" and "cn" properties with literal "%20".
+        group["dn"] = group["dn"].replace(" ", "%20")
+        group["attributes"]["cn"] = group["attributes"]["cn"].replace(" ", "%20")
         ldap_json["groups"].append(group)
 
     # -- Organizations --
@@ -214,11 +223,20 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
             if (raw_attribute == 'objectClass'):
                 org["attributes"][raw_attribute] = orgs["entries"][entry]["raw"][raw_attribute]
             else:
-                org["attributes"][raw_attribute] = orgs["entries"][entry]["raw"][raw_attribute][0]                
+                org["attributes"][raw_attribute] = orgs["entries"][entry]["raw"][raw_attribute][0]
+        # Replace white spaces in "dn" and "dc" properties with literal "%20".
+        org["dn"] = org["dn"].replace(" ", "%20")
+        org["attributes"]["dc"] = org["attributes"]["dc"].replace(" ", "%20")
         ldap_json["organizations"].append(org)
-    
+
+    # -- Memberships --
+    # Process memberships so that white spaces in values are replaced with literal "%20".
+    for membership in ldap_json["memberships"]:
+        for item in membership:
+            membership[item] = membership[item].replace(" ", "%20")
+
     logger.info("JSON object generated")
-    
+
     return ldap_json
 
 @asynccontextmanager
