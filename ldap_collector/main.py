@@ -164,8 +164,9 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
             last_name = splitted_given_name[1].strip()
         user["attributes"]["firstName"] = first_name
         user["attributes"]["lastName"] = last_name
-        # Replace white spaces in "dn" and "uid" properties with literal "%20".
+        # Replace white spaces in "dn", "cn" and "uid" properties with literal "%20".
         user["dn"] = user["dn"].replace(" ", "%20")
+        user["attributes"]["cn"] = user["attributes"]["cn"].replace(" ", "%20")
         user["attributes"]["uid"] = user["attributes"]["uid"].replace(" ", "%20")
         ldap_json["users"].append(user)
 
