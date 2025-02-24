@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: ldap-collector
-        image: ghcr.io/candil-data-fabric/ldap-collector:2.2.2
+        image: ghcr.io/candil-data-fabric/ldap-collector:2.2.3
         imagePullPolicy: Always
         ports:
         - containerPort: 63300

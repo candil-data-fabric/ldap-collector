@@ -7,6 +7,7 @@
         "gidNumber": "500",
         "givenName": "User",
         "homeDirectory": "/home/users/user1",
+        "mail": "undefined",
         "objectClass": [
           "inetOrgPerson",
           "posixAccount",
@@ -27,6 +28,7 @@
         "gidNumber": "500",
         "givenName": "User",
         "homeDirectory": "/home/users/user2",
+        "mail": "undefined",
         "objectClass": [
           "inetOrgPerson",
           "posixAccount",
@@ -47,6 +49,7 @@
         "gidNumber": "500",
         "givenName": "User",
         "homeDirectory": "/home/users/user3",
+        "mail": "undefined",
         "objectClass": [
           "inetOrgPerson",
           "posixAccount",
@@ -67,6 +70,7 @@
         "gidNumber": "500",
         "givenName": "User",
         "homeDirectory": "/home/users/user4",
+        "mail": "undefined",
         "objectClass": [
           "inetOrgPerson",
           "posixAccount",
@@ -87,6 +91,7 @@
         "gidNumber": "500",
         "givenName": "User",
         "homeDirectory": "/home/users/user5",
+        "mail": "undefined",
         "objectClass": [
           "inetOrgPerson",
           "posixAccount",
@@ -107,6 +112,7 @@
         "gidNumber": "500",
         "givenName": "User",
         "homeDirectory": "/home/users/user6",
+        "mail": "undefined",
         "objectClass": [
           "inetOrgPerson",
           "posixAccount",

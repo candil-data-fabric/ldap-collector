@@ -1,5 +1,5 @@
 __name__ = "LDAP Collector"
-__version__ = "2.2.2"
+__version__ = "2.2.3"
 __author__ = "David Martínez García"
 __credits__ = ["GIROS DIT-UPM", "Luis Bellido Triana", "Daniel González Sánchez", "David Martínez García"]
 
@@ -155,6 +155,8 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
                 user["attributes"][raw_attribute] = users["entries"][entry]["raw"][raw_attribute]
             else:
                 user["attributes"][raw_attribute] = users["entries"][entry]["raw"][raw_attribute][0]
+        # Specific use case:
+        # Generate "firstName" and "lastName" attributes from the "givenName" one.
         splitted_given_name = user["attributes"]["givenName"].split()
         if (len(splitted_given_name) < 2):
             first_name = splitted_given_name[0].strip()
@@ -164,6 +166,11 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
             last_name = splitted_given_name[1].strip()
         user["attributes"]["firstName"] = first_name
         user["attributes"]["lastName"] = last_name
+        # Specific use case:
+        # If "mail" property is not defined in LDAP, it is included here with value "undefined".
+        if ("mail" not in user["attributes"]):
+            user["attributes"]["mail"] = "undefined"
+        # Specific use case:
         # Replace white spaces in "dn", "cn" and "uid" properties with literal "%20".
         user["dn"] = user["dn"].replace(" ", "%20")
         user["attributes"]["cn"] = user["attributes"]["cn"].replace(" ", "%20")
@@ -188,6 +195,7 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
                         ldap_json["memberships"].append(membership)
             else:
                 role["attributes"][raw_attribute] = roles["entries"][entry]["raw"][raw_attribute][0]
+        # Specific use case:
         # Replace white spaces in "dn" and "cn" properties with literal "%20".
         role["dn"] = role["dn"].replace(" ", "%20")
         role["attributes"]["cn"] = role["attributes"]["cn"].replace(" ", "%20")
@@ -202,7 +210,6 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
             if (raw_attribute == 'objectClass') or (raw_attribute == 'memberUid'):
                 group["attributes"][raw_attribute] = groups["entries"][entry]["raw"][raw_attribute]
                 # Include group common name (CN) in memberships:
-                # Currently, only one group per user is included because of limitations with YARRRML (post processing of JSON output).
                 if (raw_attribute == 'memberUid'):
                     for memberUid in groups["entries"][entry]["raw"]["memberUid"]:
                         for membership in ldap_json["memberships"]:
@@ -210,6 +217,7 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
                                 membership["group_cn"] = groups["entries"][entry]["raw"]["cn"][0]
             else:
                 group["attributes"][raw_attribute] = groups["entries"][entry]["raw"][raw_attribute][0]
+        # Specific use case:
         # Replace white spaces in "dn" and "cn" properties with literal "%20".
         group["dn"] = group["dn"].replace(" ", "%20")
         group["attributes"]["cn"] = group["attributes"]["cn"].replace(" ", "%20")
@@ -225,12 +233,13 @@ def generate_json(users, roles, groups, orgs, organization_dn) -> dict:
                 org["attributes"][raw_attribute] = orgs["entries"][entry]["raw"][raw_attribute]
             else:
                 org["attributes"][raw_attribute] = orgs["entries"][entry]["raw"][raw_attribute][0]
+        # Specific use case:
         # Replace white spaces in "dn" and "dc" properties with literal "%20".
         org["dn"] = org["dn"].replace(" ", "%20")
         org["attributes"]["dc"] = org["attributes"]["dc"].replace(" ", "%20")
         ldap_json["organizations"].append(org)
 
-    # -- Memberships --
+    # Specific use case:
     # Process memberships so that white spaces in values are replaced with literal "%20".
     for membership in ldap_json["memberships"]:
         for item in membership:

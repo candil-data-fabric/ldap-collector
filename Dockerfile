@@ -4,8 +4,8 @@
 FROM ubuntu:jammy
 
 # Some labels are defined to store metadata.
-LABEL image_version="2.2.2"
-LABEL app_version="2.2.2"
+LABEL image_version="2.2.3"
+LABEL app_version="2.2.3"
 LABEL maintainer="David Martínez García"
 
 # Variables to automatically install/update tzdata.
