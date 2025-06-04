@@ -4,9 +4,7 @@ The LDAP Collector is a Python application based on the [`ldap3`](https://ldap3.
 
 It connects to an LDAP server, retrieves information of users, roles, groups and organizations and generates a JSON object which can be used later by Morph-KGC to generate RDF triples given the appropriate mappings file. An example of this JSON output is available [here](examples/ldap.json).
 
-The YARRRML mappings file can be found [here](examples/mappings.yaml), whereas its RML equivalent is [here](examples/mappings.ttl). These mappings have been defined according to the aerOS Continuum Ontology, which diagram is included below:
-
-<img src="docs/aerOS-continuum-ontology.png" width="1200">
+The YARRRML mappings file can be found [here](examples/mappings.yaml), whereas its RML equivalent is [here](examples/mappings.ttl).
 
 The LDAP Collector is a neccesary component for integrating LDAP data into the knowledge graph.
 
@@ -87,3 +85,14 @@ To delete the deployment, run the following command, also at the `./kubernetes` 
 ```bash
 $ kubectl delete -f ldap-collector.yaml
 ```
+
+## Acknowledgements
+
+This work was partially supported by the following projects:
+
+- **Horizon Europe aerOS**: Autonomous, scalablE, tRustworthy, intelligent European meta Operating System for the IoT edge-cloud continuum. Grant agreement 101069732
+- **SNS Horizon Europe ROBUST-6G**: Smart, Automated, and Reliable Security Service Platform for 6G. Grant agreement 101139068
+- **UNICO 5G I+D 6G-DATADRIVEN**: Redes de próxima generación (B5G y 6G) impulsadas por datos para la fabricación sostenible y la respuesta a emergencias. Ministerio de Asuntos Económicos y Transformación Digital. European Union NextGenerationEU.
+- **UNICO 5G I+D 6G-CHRONOS**: Arquitectura asistida por IA para 5G-6G con red determinista para comunicaciones industriales. Ministerio de Asuntos Económicos y Transformación Digital. European Union NextGenerationEU.
+
+  ![UNICO](./images/ack-logo.png)
