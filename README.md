@@ -4,9 +4,7 @@ The LDAP Collector is a Python application based on the [`ldap3`](https://ldap3.
 
 It connects to an LDAP server, retrieves information of users, roles, groups and organizations and generates a JSON object which can be used later by Morph-KGC to generate RDF triples given the appropriate mappings file. An example of this JSON output is available [here](examples/ldap.json).
 
-The YARRRML mappings file can be found [here](examples/mappings.yaml), whereas its RML equivalent is [here](examples/mappings.ttl). These mappings have been defined according to the aerOS Continuum Ontology, which diagram is included below:
-
-<img src="docs/aerOS-continuum-ontology.png" width="1200">
+The YARRRML mappings file can be found [here](examples/mappings.yaml), whereas its RML equivalent is [here](examples/mappings.ttl).
 
 The LDAP Collector is a neccesary component for integrating LDAP data into the knowledge graph.
 
